@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MapPin, Phone, MessageCircle, AlertCircle } from 'lucide-react';
 import NavbarClient from '../components/NavbarClient';
 import { productApi } from '../api/productApi';
@@ -13,9 +14,12 @@ const Catalogue = () => {
 
   const CONTACT_INFO = {
     phone: '+212 667 166 583',
+    // kept for footer, whatsapp link no longer used by contact button
     whatsapp: 'https://wa.me/212667166583',
     address: 'LA CASA OPTIC 298 C Ain chkf, Fès 30050',
   };
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -47,7 +51,8 @@ const Catalogue = () => {
   };
 
   const handleContactClick = () => {
-    window.location.href = CONTACT_INFO.whatsapp;
+    // redirect user to contact page instead of external link
+    navigate('/contact');
   };
 
   if (loading) {

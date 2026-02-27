@@ -108,6 +108,18 @@
   transform: translateY(0);
 }
 
+.success-text {
+  color: green;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.error-text {
+  color: red;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
 /* ===== INFORMATIONS DE CONTACT ===== */
 .contact-info-section h2 {
   font-size: 1.8rem;

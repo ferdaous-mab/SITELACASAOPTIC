@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers.auth_router import router as auth_router
 from app.routers.product_router import router as product_router
 from app.routers.sale_router import router as sale_router
+from app.routers.contact_router import router as contact_router
 
 # Créer l'application FastAPI
 app = FastAPI(
@@ -26,6 +27,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(product_router)
 app.include_router(sale_router)
+app.include_router(contact_router)
 
 # Route racine
 @app.get("/", tags=["Root"])

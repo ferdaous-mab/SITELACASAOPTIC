@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MapPin, Phone, Mail, MessageCircle, Clock } from 'lucide-react';
 import NavbarClient from '../components/NavbarClient';
 import './contact.css';
@@ -6,9 +7,40 @@ const Contact = () => {
   const CONTACT_INFO = {
     phone: '+212 667 166 583',
     whatsapp: 'https://wa.me/212667166583',
-    email: 'contact@optique.com',
+    email: 'mabroukiferdaous1@gmail.com',
     address: 'LA CASA OPTIC 298 C Ain chkf, Fès 30050',
     hours: 'Lun-Ven: 09h30-20h30 | Sam: 09h30-14h30 | Dim: Fermé',
+  };
+
+  // états du formulaire
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [status, setStatus] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus(null);
+    try {
+      const res = await fetch('http://localhost:8000/contact/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (res.ok) {
+        setStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        const data = await res.json();
+        setStatus(`error: ${data.detail}`);
+      }
+    } catch (err) {
+      console.error('Contact submission error', err);
+      setStatus('error');
+    }
   };
 
   const handleWhatsApp = () => {
@@ -41,7 +73,7 @@ const Contact = () => {
           {/* Formulaire de Contact */}
           <div className="contact-form-section">
             <h2>Envoyez-nous un message</h2>
-            <form className="contact-form">
+            <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="name">Nom</label>
                 <input
@@ -50,6 +82,8 @@ const Contact = () => {
                   name="name"
                   placeholder="Votre nom complet"
                   required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
 
@@ -61,6 +95,8 @@ const Contact = () => {
                   name="email"
                   placeholder="votre.email@example.com"
                   required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
 
@@ -72,6 +108,8 @@ const Contact = () => {
                   name="subject"
                   placeholder="Sujet de votre message"
                   required
+                  value={formData.subject}
+                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                 />
               </div>
 
@@ -83,9 +121,17 @@ const Contact = () => {
                   placeholder="Votre message..."
                   rows="6"
                   required
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 ></textarea>
               </div>
 
+              {status === 'success' && <p className="success-text">Message envoyé !</p>}
+              {status && status.startsWith('error') && (
+                <p className="error-text">
+                  Échec envoi ({status.replace('error: ', '')})
+                </p>
+              )}
               <button type="submit" className="submit-btn">
                 Envoyer le message
               </button>

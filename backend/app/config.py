@@ -2,6 +2,10 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
+from dotenv import load_dotenv
+
+# charge les variables d'environnement depuis un fichier .env si présent
+load_dotenv()
 
 # Configuration de la base de données
 # En production (Render), utilise DATABASE_URL
@@ -42,6 +46,16 @@ SECRET_KEY = os.getenv(
 )
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
+
+# --- Paramètres d'envoi d'email pour le formulaire de contact ---
+EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_USER = os.getenv("EMAIL_USER", "")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "")
+# adresse utilisée dans l'en‑tête From (par défaut l'utilisateur SMTP)
+EMAIL_FROM = os.getenv("EMAIL_FROM", EMAIL_USER or "no-reply@optique.com")
+# adresse qui recevra les messages de contact
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", EMAIL_USER)
 
 # Dependency pour obtenir la session DB
 def get_db():
